@@ -1,0 +1,3 @@
+<resourceLink name="jdbc/ads"
+	global="jdbc/ads"
+	type="javax.sql.Datasource" />
