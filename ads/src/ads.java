@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import javax.sql.DataSource;
+
 /**
  * Servlet implementation class ads
  */
@@ -40,11 +41,38 @@ public class ads extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setContentType("text/html");
+		
 		PrintWriter out;
 		out = response.getWriter();
-		out.print("<html>");
+		
+		out.print("<!DOCTYPE html>\r\n"
+				+ "<!--[if lt IE 7]>      <html class=\"no-js lt-ie9 lt-ie8 lt-ie7\"> <![endif]-->\r\n"
+				+ "<!--[if IE 7]>         <html class=\"no-js lt-ie9 lt-ie8\"> <![endif]-->\r\n"
+				+ "<!--[if IE 8]>         <html class=\"no-js lt-ie9\"> <![endif]-->\r\n"
+				+ "<!--[if gt IE 8]>      <html class=\"no-js\"> <!--<![endif]-->\r\n"
+				+ "<html>\r\n"
+				+ "  <head>\r\n"
+				+ "    <meta charset=\"utf-8\">\r\n"
+				+ "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n"
+				+ "    <title></title>\r\n"
+				+ "    <meta name=\"description\" content=\"\">\r\n"
+				+ "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\r\n"
+				+ "\r\n	   "
+				+ "<!-- JavaScript Bundle with Popper -->\r\n"
+				+ "    <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0\" crossorigin=\"anonymous\"></script>\r\n"
+				+ "\r\n    "
+				+ "    <!-- CSS only -->\r\n"
+				+ "    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl\" crossorigin=\"anonymous\">\r\n"
+				+ "\r\n"
+				+ "  </head>\r\n"
+				+ "  <body>\r\n"
+				+ "    <!--[if lt IE 7]>\r\n"
+				+ "      <p class=\"browsehappy\">You are using an <strong>outdated</strong> browser. Please <a href=\"#\">upgrade your browser</a> to improve your experience.</p>\r\n"
+				+ "    <![endif]-->\r\n"
+				+ "    \r\n");
+		out.print("<header>[REPLACE ME WITH A PROPERTY]</header>");
+
 		try {
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:comp/env");
@@ -57,32 +85,36 @@ public class ads extends HttpServlet {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int colCount = rsmd.getColumnCount();
 						
-			out.print("<table>");
-				out.print("<tr>");
+			out.print("<table>\r\n");
+				out.print("<tr>\r\n");
 					for (int i = 1; i <= colCount; i++) {
 						String colName = rsmd.getColumnName(i);
 						out.print("<th>");
 						out.print(colName);
-						out.print("</th>");
+						out.print("</th>\r\n");
 					}
-				out.print("</tr>");
-			while (rs.next()) {
-				out.print("<tr>");
+				out.print("</tr>\r\n");
+			while ( rs.next() ) {
+				out.print("<tr>\r\n");
 				for (int i = 1; i <= colCount; i++) {
 					String attrName = rsmd.getColumnName(i);
-					out.print("<td>");
-					out.print( rs.getString(attrName));
-					out.print("</td>");
+					out.print("<td>\r\n");
+					out.print( rs.getString(attrName) + "\r\n");
+					out.print("</td>\r\n");
 				}
-				out.print("</tr>");
+				out.print("</tr>\r\n");
 			}
-			out.print("</table>");
+			out.print("</table>\r\n");
 			conn.close();
 		}catch (SQLException | NamingException ex) {
 			System.err.println(ex);
 		}
 		
-		out.print("</html>");
+		out.print("<script src=\"\" async defer></script>\r\n"
+				+ "\r\n"
+				+ " 	</body>\r\n"
+				+ "\r\n"
+				+ "</html>");
 	}
 
 	/**
