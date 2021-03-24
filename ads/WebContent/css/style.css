@@ -1,0 +1,12 @@
+.bg-img{
+	background: url(../images/main.jpg) no-repeat center fixed;
+	background-position-y: 0;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	height: calc(100vh - 56px);
+	width: 100vw;
+	position: absolute;
+	opacity: .4;
+}
