@@ -3,7 +3,7 @@ import java.io.PrintWriter;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+//import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -47,6 +47,7 @@ public class ads extends HttpServlet {
 		int machineId = 3;
 		int floorNum = 2;
 		
+		//Start HTML document header
 		out.print("<!DOCTYPE html>\r\n"
 				+ "<!--[if lt IE 7]>      <html class='no-js lt-ie9 lt-ie8 lt-ie7'> <![endif]-->\r\n"
 				+ "<!--[if IE 7]>         <html class='no-js lt-ie9 lt-ie8'> <![endif]-->\r\n"
@@ -74,6 +75,8 @@ public class ads extends HttpServlet {
 				+ "      <p class='browsehappy'>You are using an <strong>outdated</strong> browser. Please <a href='#'>upgrade your browser</a> to improve your experience.</p>\r\n"
 				+ "    <![endif]-->\r\n"
 				+ "    \r\n");
+		//end HTML document header
+		//Start Navigation panel header
 		out.print("<nav class='navbar navbar-expand-lg navbar-dark bg-dark'>");
 			out.print("<div class='container-fluid ms-3'>");
 				out.print("<a class='navbar-brand bg-light p-2 text-dark d-flex' href='#'>");
@@ -96,6 +99,7 @@ public class ads extends HttpServlet {
 						+ "        </li>\r\n"
 						+ "      </ul>"
 						+ "    </div>");
+				//start search form
 				out.print("<form class='d-flex justify-content-end' action='home' method='post'>\r\n"
 						+ "    <div class='form-floating me-4'>"
 						+ "        <input class='form-control me-2' id='sTerm' name='sTerm' type='search' placeholder='Search for patient orders' aria-label='Search'>\r\n"
@@ -103,11 +107,16 @@ public class ads extends HttpServlet {
 						+ "    </div>"
 						+ "    <button class='btn btn-outline-light me-3' type='submit'>Search</button>\r\n"
 						+ "</form>");
+				//end search form
 			out.print("</div>");
 		out.print("</nav>");
+		//end navigation panel header
+		// background image panel
 		out.print("<div class='bg-img'></div>");
+		//begin content
 		out.print("<div class='content-wrapper'>");
-			out.print("<div class=''>");
+			//start beds panel - this panel will hold the patient beds and names of patients in beds
+			out.print("<div class='bed-content'>");
 			
 			//Code in try/catch block will display all the patients on the floor where nurses can pull medication info from.
 		
@@ -118,31 +127,56 @@ public class ads extends HttpServlet {
 				Connection conn = ds.getConnection();
 				
 				Statement statement = conn.createStatement();
+				
+				//TODO: SQL needs to be written to pull patient names and their given beds on the given floor from floorNum
 				String sql = "select * from ads.patient";
-				ResultSet rs = statement.executeQuery(sql);
-				ResultSetMetaData rsmd = rs.getMetaData();
-				int colCount = rsmd.getColumnCount();
+				ResultSet rs = statement.executeQuery(sql); //This pulls the result set
+				//ResultSetMetaData rsmd = rs.getMetaData(); //This pulls metadata from the table (i.e. column names, etc)
+				//int colCount = rsmd.getColumnCount(); // gets the number of columns in the result set, not used in its current form
 
 				while ( rs.next() ) {
-					out.print("<i class='fas fa-procedures'></i>\r\n");
-					for (int i = 1; i <= colCount; i++) {
-						String attrName = rsmd.getColumnName(i);
-						out.print("<td>\r\n");
-						out.print( rs.getString(attrName) + "\r\n");
-						out.print("</td>\r\n");
+					out.print("<div class='bed-wrapper'>");
+						out.print("<div class='bed'>");
+						out.print("<i class='fas fa-procedures'></i>\r\n");
+						out.print("<div class='bed-number'>" + rs.getString("bed") + "</div>");
+						String patientName = rs.getString("fname") + " " + rs.getString("lname");
+						out.print("<div class='p-name'>" + patientName + "</div>");
+					out.print("</div>");
 					}
-					out.print("</tr>\r\n");
-				}
-				out.print("</table>\r\n");
+				
 				conn.close();
 			}catch (SQLException | NamingException ex) {
 				System.err.println(ex);
 			}
 		
+			out.print("</div>");
+			// end bed panel
+			// start medication info panel
+			out.print("<div class='med-info'>");
+			
+			//try {
+			//	Context initContext = new InitialContext();
+			//	Context envContext = (Context) initContext.lookup("java:comp/env");
+			//	DataSource ds = (DataSource) envContext.lookup("jdbc/ADS");
+			//	Connection conn = ds.getConnection();
+				
+			//	Statement statement = conn.createStatement();
+				
+				//TODO: Write SQL statement to get patient med info
+				//String sql = "";
+				//ResultSet rs = statement.executeQuery(sql);
+
+				//TODO: Determine how best to display data from given back from result set and change data in this container based on the bed selected.
+								
+			//}catch (SQLException | NamingException ex) {
+			//	System.err.println(ex);
+			//}
+			
+			out.print("</div>");
+			//end medication info panel
+			
 		out.print("<script src='' async defer></script>\r\n"
-				+ "\r\n"
-				+ " 	</body>\r\n"
-				+ "\r\n"
+				+ "</body>\r\n"
 				+ "</html>");
 	}
 
@@ -152,7 +186,6 @@ public class ads extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-		String searchParam = request.getParameter("sTerm");
 		
 		//TODO Write function that returns search results back to the page
 	}
