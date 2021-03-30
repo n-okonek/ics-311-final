@@ -1,153 +1,142 @@
 -- -----------------------------------------------------
--- Schema ADS
+-- Schema ads
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS ADS;
+CREATE SCHEMA IF NOT EXISTS ads;
 
 -- -----------------------------------------------------
--- Table ADS.Status
+-- Table ads.Status
 -- -----------------------------------------------------
-CREATE TABLE ADS.Status (
-  Id SERIAL PRIMARY KEY,
-  Status VARCHAR(45) NULL
+CREATE TABLE ads.status (
+  id SERIAL PRIMARY KEY,
+  status VARCHAR(45) NULL
 );
 
 -- -----------------------------------------------------
--- Table ADS.Patient
+-- Table ads.Patient
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.Patient (
-  Id SERIAL PRIMARY KEY,
-  FName VARCHAR(45) NOT NULL,
-  LName VARCHAR(45) NOT NULL,
-  MI VARCHAR(45) NULL,
-  Floor INT NOT NULL,
-  p_Group INT NULL,
-  Status INT NULL,
-  CONSTRAINT Status
-    FOREIGN KEY (Status)
-    REFERENCES ADS.Status (Id)
+CREATE TABLE IF NOT EXISTS ads.patient (
+  id SERIAL PRIMARY KEY,
+  fname VARCHAR(45) NOT NULL,
+  lname VARCHAR(45) NOT NULL,
+  mi VARCHAR(45) NULL,
+  building_floor INT NULL,
+  status INT NULL,
+  bed INT NULL,
+  CONSTRAINT status
+    FOREIGN KEY (status)
+    REFERENCES ads.status (id)
 );
 
 -- -----------------------------------------------------
--- Table ADS.Doctor
+-- Table ads.Doctor
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.Doctor (
-  Id SERIAL PRIMARY KEY,
-  FName VARCHAR(45) NOT NULL,
-  LName VARCHAR(45) NOT NULL,
-  MI VARCHAR(45) NULL
+CREATE TABLE IF NOT EXISTS ads.doctor (
+  id SERIAL PRIMARY KEY,
+  fname VARCHAR(45) NOT NULL,
+  lname VARCHAR(45) NOT NULL,
+  mi VARCHAR(45) NULL
 );
 
 -- -----------------------------------------------------
--- Table ADS.Medication
+-- Table ads.Medication
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.Medication (
-  Id SERIAL PRIMARY KEY,
-  Name VARCHAR(45) NOT NULL,
-  Expiration DATE NOT NULL
+CREATE TABLE IF NOT EXISTS ads.medication (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(45) NOT NULL,
+  strength varchar(10) NOT NULL,
+  expiration DATE NOT NULL
 );
 
 -- -----------------------------------------------------
--- Table ADS.Order
+-- Table ads.Order
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.Order (
-  Id SERIAL PRIMARY KEY,
-  Patient INT NULL,
-  Doctor INT NULL,
-  Medication INT NULL,
-  Status VARCHAR(45) NULL,
-  CONSTRAINT Patient
-    FOREIGN KEY (Patient)
-    REFERENCES ADS.Patient (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT Doctor
-    FOREIGN KEY (Doctor)
-    REFERENCES ADS.Doctor (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT Medication
-    FOREIGN KEY (Medication)
-    REFERENCES ADS.Medication (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+CREATE TABLE IF NOT EXISTS ads.order (
+  id SERIAL PRIMARY KEY,
+  patient INT NOT NULL,
+  doctor INT NOT NULL,
+  medication INT NOT NULL,
+  dosage varchar(255) NOT NULL,
+  strength INT NULL,
+  status int NOT NULL,
+  CONSTRAINT patient
+    FOREIGN KEY (patient)
+    REFERENCES ads.patient (id),
+  CONSTRAINT doctor
+    FOREIGN KEY (doctor)
+    REFERENCES ads.doctor (id),
+  CONSTRAINT medication
+    FOREIGN KEY (medication)
+    REFERENCES ads.medication (id),
+  CONSTRAINT status
+    FOREIGN KEY (status)
+    REFERENCES ads.status (id)
 );
 
 -- -----------------------------------------------------
--- Table ADS.Machine
+-- Table ads.Machine
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.Machine (
-  Id SERIAL PRIMARY KEY,
-  Floor INT NULL,
-  Num_Drawers INT NULL
+CREATE TABLE IF NOT EXISTS ads.machine (
+  id SERIAL PRIMARY KEY,
+  building_floor INT NULL,
+  num_drawers INT NULL
   );
 
 -- -----------------------------------------------------
--- Table ADS.Role
+-- Table ads.Role
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.Role (
-  Id SERIAL PRIMARY KEY,
-  Type VARCHAR(45) NOT NULL)
-;
+CREATE TABLE IF NOT EXISTS ads.role (
+  id SERIAL PRIMARY KEY,
+  type VARCHAR(45) NOT NULL
+  );
 
 -- -----------------------------------------------------
--- Table ADS.User
+-- Table ads.User
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.User (
-  Id SERIAL PRIMARY KEY,
-  Username VARCHAR(45) NOT NULL,
-  Password VARCHAR(255) NOT NULL,
-  Role INT NULL,
-  FName VARCHAR(45) NULL,
-  LName VARCHAR(45) NULL,
-  MI VARCHAR(10) NULL,
-  CONSTRAINT Role
-    FOREIGN KEY (Role)
-    REFERENCES ADS.Role (Id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-;
+CREATE TABLE IF NOT EXISTS ads.user (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(45) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  role INT NULL,
+  fname VARCHAR(45) NULL,
+  lname VARCHAR(45) NULL,
+  mi VARCHAR(10) NULL,
+  CONSTRAINT role
+    FOREIGN KEY (role)
+    REFERENCES ads.role (id)
+);
 
 -- -----------------------------------------------------
--- Table ADS.Inventory
+-- Table ads.Inventory
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.Inventory (
-  Drawer INT NOT NULL,
-  Machine INT NOT NULL,
-  Medication INT NULL,
-  Qty INT NULL,
-  Active BOOLEAN NULL,
-  Audit_Date DATE NULL,
-  Last_Audited_By INT NULL,
-  Min_qty INT NULL,
-  Max_qty INT NULL,
-  PRIMARY KEY (Drawer, Machine),
-  CONSTRAINT Machine
-    FOREIGN KEY (Machine)
-    REFERENCES ADS.Machine (Id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT Last_Audited_By
-    FOREIGN KEY (Last_Audited_By)
-    REFERENCES ADS.User (Id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT Medication
-    FOREIGN KEY (Medication)
-    REFERENCES ADS.Medication (Id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-;
+CREATE TABLE IF NOT EXISTS ads.inventory (
+  drawer INT NOT NULL,
+  machine INT NOT NULL,
+  medication INT NULL,
+  qty INT NULL,
+  active BOOLEAN NULL,
+  audit_date DATE NULL,
+  last_audited_by INT NULL,
+  min_qty INT NULL,
+  max_qty INT NULL,
+  PRIMARY KEY (drawer, machine),
+  CONSTRAINT machine
+    FOREIGN KEY (machine)
+    REFERENCES ads.machine (id),
+  CONSTRAINT last_audited_by
+    FOREIGN KEY (last_audited_by)
+    REFERENCES ads.user (id),
+  CONSTRAINT medication
+    FOREIGN KEY (medication)
+    REFERENCES ads.medication (id)
+);
 
 -- -----------------------------------------------------
--- Table ADS.Nurse
+-- Table ads.Nurse
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS ADS.Nurse (
-  Id SERIAL PRIMARY KEY,
-  Shift VARCHAR(45) NULL,
-  CONSTRAINT Id
-    FOREIGN KEY (Id)
-    REFERENCES ADS.User (Id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-	)
-;
+CREATE TABLE IF NOT EXISTS ads.nurse (
+  id SERIAL PRIMARY KEY,
+  shift VARCHAR(45) NULL,
+  CONSTRAINT id
+    FOREIGN KEY (id)
+    REFERENCES ads.user (id)
+);

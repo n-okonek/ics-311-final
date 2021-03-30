@@ -65,6 +65,7 @@ public class ads extends HttpServlet {
 				+ "<!-- JavaScript Bundle with Popper -->\r\n"
 				+ "    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js' integrity='sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0' crossorigin='anonymous'></script>\r\n"
 				+ "\r\n    "
+				+ "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js\" integrity=\"sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==\" crossorigin=\"anonymous\"></script>"
 				+ "    <!-- CSS only -->\r\n"
 				+ "    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl' crossorigin='anonymous'>\r\n"
 				+ "\r\n"
@@ -135,12 +136,15 @@ public class ads extends HttpServlet {
 				//int colCount = rsmd.getColumnCount(); // gets the number of columns in the result set, not used in its current form
 
 				while ( rs.next() ) {
-					out.print("<div class='bed-wrapper'>");
+					out.print("<div class='bed-wrapper btn'>");
 						out.print("<div class='bed'>");
-						out.print("<i class='fas fa-procedures'></i>\r\n");
-						out.print("<div class='bed-number'>" + rs.getString("bed") + "</div>");
-						String patientName = rs.getString("fname") + " " + rs.getString("lname");
-						out.print("<div class='p-name'>" + patientName + "</div>");
+							out.print("<i class='fas fa-procedures'></i>\r\n");
+							out.print("<div class='bed-number'>");
+								out.print(rs.getString("bed"));
+							out.print("</div>");
+							String patientName = rs.getString("fname") + " " + rs.getString("lname");
+							out.print("<div class='p-name'>" + patientName + "</div>");
+						out.print("</div>");
 					out.print("</div>");
 					}
 				
@@ -154,28 +158,28 @@ public class ads extends HttpServlet {
 			// start medication info panel
 			out.print("<div class='med-info'>");
 			
-			//try {
-			//	Context initContext = new InitialContext();
-			//	Context envContext = (Context) initContext.lookup("java:comp/env");
-			//	DataSource ds = (DataSource) envContext.lookup("jdbc/ADS");
-			//	Connection conn = ds.getConnection();
+			try {
+				Context initContext = new InitialContext();
+				Context envContext = (Context) initContext.lookup("java:comp/env");
+				DataSource ds = (DataSource) envContext.lookup("jdbc/ADS");
+				Connection conn = ds.getConnection();
 				
-			//	Statement statement = conn.createStatement();
+				Statement statement = conn.createStatement();
 				
 				//TODO: Write SQL statement to get patient med info
-				//String sql = "";
-				//ResultSet rs = statement.executeQuery(sql);
+				String sql = "SELECT * from ads.order";
+				ResultSet rs = statement.executeQuery(sql);
 
 				//TODO: Determine how best to display data from given back from result set and change data in this container based on the bed selected.
 								
-			//}catch (SQLException | NamingException ex) {
+			}catch (SQLException | NamingException ex) {
 			//	System.err.println(ex);
-			//}
+			}
 			
 			out.print("</div>");
 			//end medication info panel
 			
-		out.print("<script src='' async defer></script>\r\n"
+		out.print("<script src='./js/site.js'></script>\r\n"
 				+ "</body>\r\n"
 				+ "</html>");
 	}
