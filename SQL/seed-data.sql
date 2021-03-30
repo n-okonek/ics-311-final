@@ -97,13 +97,32 @@ INSERT INTO ads.status (status)
 
 INSERT INTO ads.role (type) VALUES ('Nurse'), ('Tech');
 
-INSERT INTO ads.patient (id, fname, lname, mi, floor, p_group, status) 
-  VALUES 
-    (5, 'Nami', 'Christin', '', 2, 1, 1), 
-    (6, 'Franky', 'king', '', 1, 3, 2),
-    (7, 'Robinson', 'Smith', '', 3, 4, 3), 
-    (8, 'Victoria', 'Hasty', '', 4, 4, 4), 
-    (9, 'Kim', 'Nguyen', '', 4, 4, 5);
+INSERT INTO ads.patient (id, fname, lname, mi, floor, p_group, status, bed)
+ VALUES (24, 'Sonia', 'Brzozowski', '', 4, 4, 9, 5),
+(1, 'John', 'Ceana', '', 1, 1, 10, 1),
+ (2, 'Lashay', 'Amon', '', 1, 3, 8, 2),
+(4, 'Willard', 'Cain', '', 1, 4, 7, 3),
+ (5, 'Nami', 'Christin', '', 1, 1, 9, 4),
+ (6, 'Franky', 'king', '', 1, 3, 6, 5),
+ (7, 'Robinson', 'Smith', '', 1, 4, 7, 6),
+(8, 'Victoria', 'Hasty', '', 2, 4, 9, 1),
+ (9, 'Kim', 'Nguyen', '', 2, 4, 10, 2),
+(10, 'Lina', 'Bohler', '', 2, 4, 8, 3),
+ (11, 'Shella', 'Tyer', '', 2, 1, 9, 4),
+ (12, 'Leo', 'Venema', '', 2, 3, 10, 5),
+ (13, 'Cletus', 'Cleghorn', '', 2, 4, 7, 6),
+ (14, 'Eugenia', 'Lambright', '', 3, 4, 7, 1),
+(15, 'Leilani', 'Tezeno', '', 3, 4, 8, 2),
+(16, 'Zack', 'Nicolosi', '', 3, 1, 9, 3),
+(17, 'Cecilia', 'Loredo', '', 3, 3, 11, 4),
+ (18, 'Katharyn', 'Ephraim', '', 3, 4, 10, 5),
+ (19, 'Mozella', 'Carrell', '', 3, 4, 6, 6),
+ (20, 'Jenine', 'Hebel', '', 4, 4, 6, 1),
+(21, 'Faustino', 'Gulotta', '', 4, 1, 8, 2),
+ (22, 'Wilhemina', 'Ahmad', '', 4, 3, 9, 3),
+(23, 'Riley', 'Harbaugh', '', 4, 4, 8, 4),
+(25, 'Bette', 'Michalik', '', 4, 4, 8, 6);
+
 
 INSERT INTO ads."order" (id, patient, doctor, medication, status) 
   VALUES 
