@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS ads.patient (
   lname VARCHAR(45) NOT NULL,
   mi VARCHAR(45) NULL,
   building_floor INT NULL,
-  status INT NULL,
+  status INT NULL 
+    CHECK (status = 3 OR status = 4 OR status =5),
   bed INT NULL,
   CONSTRAINT status
     FOREIGN KEY (status)
@@ -56,8 +57,7 @@ CREATE TABLE IF NOT EXISTS ads.order (
   doctor INT NOT NULL,
   medication INT NOT NULL,
   dosage varchar(255) NOT NULL,
-  strength INT NULL,
-  status int NOT NULL,
+  status INT NOT NULL CHECK (status = 1 OR status = 2),
   CONSTRAINT patient
     FOREIGN KEY (patient)
     REFERENCES ads.patient (id),
@@ -97,8 +97,8 @@ CREATE TABLE IF NOT EXISTS ads.user (
   username VARCHAR(45) NOT NULL,
   password VARCHAR(255) NOT NULL,
   role INT NULL,
-  fname VARCHAR(45) NULL,
-  lname VARCHAR(45) NULL,
+  fname VARCHAR(45) NOT NULL,
+  lname VARCHAR(45) NOT NULL,
   mi VARCHAR(10) NULL,
   CONSTRAINT role
     FOREIGN KEY (role)
@@ -111,13 +111,13 @@ CREATE TABLE IF NOT EXISTS ads.user (
 CREATE TABLE IF NOT EXISTS ads.inventory (
   drawer INT NOT NULL,
   machine INT NOT NULL,
-  medication INT NULL,
-  qty INT NULL,
+  medication INT NOT NULL,
+  qty INT NOT NULL,
   active BOOLEAN NULL,
   audit_date DATE NULL,
   last_audited_by INT NULL,
-  min_qty INT NULL,
-  max_qty INT NULL,
+  min_qty INT NOT NULL,
+  max_qty INT NOT NULL,
   PRIMARY KEY (drawer, machine),
   CONSTRAINT machine
     FOREIGN KEY (machine)
