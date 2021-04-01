@@ -140,3 +140,22 @@ CREATE TABLE IF NOT EXISTS ads.nurse (
     FOREIGN KEY (id)
     REFERENCES ads.user (id)
 );
+
+-- -----------------------------------------------------
+-- View ads.patient_info
+-- -----------------------------------------------------
+CREATE VIEW patient_info AS
+  SELECT patient.bed, 
+        patient.fname, 
+        patient.lname,
+        order.medication, 
+        medication.strength, 
+        order.dosage, 
+        doctor.fname,
+        doctor.lname,
+        inventory.*
+  FROM ads.patient, ads.order, ads.medication, ads.doctor, ads.inventory
+  JOIN order on ads.patient.id = ads.order.patient
+  JOIN medication on ads.medication.id = ads.order.medication
+  JOIN doctor on ads.doctor.id = ads.order.doctor
+  JOIN inventory on ads.medication.id = ads.inventory.medication

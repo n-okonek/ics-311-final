@@ -151,7 +151,7 @@ INSERT INTO ads.patient (id, fname, lname, mi, building_floor, status, bed)
     (3, 'Robinson', 'Smith', '', 1, 3, 3), 
     (4, 'Victoria', 'Hasty', '', 1, 3, 4), 
     (5, 'Kim', 'Nguyen', '', 1, 3, 5),
-    (6, 'Benedict', 'Cumberbatch', '', 2, 3, 6),
+    (6, 'Benedict', 'Cumberbatch', '', 1, 3, 6),
     (7, 'Robert', 'Downey Jr.', '', 2, 3, 1),
     (8, 'Bob', 'Jackson', '', 2, 3, 2),
     (9, 'Oswald', 'Osbourne', '', 2, 3, 3),

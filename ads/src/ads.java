@@ -130,8 +130,9 @@ public class ads extends HttpServlet {
 				Statement statement = conn.createStatement();
 				
 				//TODO: SQL needs to be written to pull patient names and their given beds on the given floor from floorNum
-				String sql = "select * from ads.patient";
+				String sql = "select * from ads.patient where building_floor = " + floorNum;
 				ResultSet rs = statement.executeQuery(sql); //This pulls the result set
+				
 				//ResultSetMetaData rsmd = rs.getMetaData(); //This pulls metadata from the table (i.e. column names, etc)
 				//int colCount = rsmd.getColumnCount(); // gets the number of columns in the result set, not used in its current form
 
@@ -179,7 +180,7 @@ public class ads extends HttpServlet {
 			out.print("</div>");
 			//end medication info panel
 			
-		out.print("<script src='./js/site.js'></script>\r\n"
+		out.print("<script src='./js/site.js' ></script>\r\n"
 				+ "</body>\r\n"
 				+ "</html>");
 	}
