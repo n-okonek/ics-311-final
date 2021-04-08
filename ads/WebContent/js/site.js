@@ -5,10 +5,11 @@ $(document).ready(function(){
 		var splitName = patientName.split(" ");
 		var firstName = splitName[0];
 		var lastName = splitName[1]; 
-		
-		$.post('./Patient', {fName: firstName, lName: lastName},
-			function(returnedData){
-				console.log(returnedData);
+		var bedNum = ($.trim( $(this).find('.bed-number').text()));
+
+		$.post('./Patient', {fName: firstName, lName: lastName, bed: bedNum},
+			function(data){
+
 				})
 				.fail(function(){
 					alert("POST failed to call data");
@@ -16,3 +17,5 @@ $(document).ready(function(){
 	});
 
 });
+
+

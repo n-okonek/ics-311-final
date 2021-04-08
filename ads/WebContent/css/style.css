@@ -24,8 +24,45 @@
 .bed-content{
 	display: flex;
 	flex: 1 1 50%;
+	height: calc(100vh - 160px);
+	flex-wrap: wrap;
 }
 
 .btn.bed-wrapper{
 	background: #dedede;
+	width: 45%;
+	height: 33%;
+	border: 1px solid #000000;
+	border-radius: 5px;	
+	margin: 0px 10px;
 }
+
+.bed i {
+	font-size: 8rem;
+}
+
+.bed-number {
+    position: relative;
+    left: 25px;
+    top: -75px;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.p-name {
+    font-size: 1.5rem;
+}
+
+.med-info{
+	flex: 1 1 50%;
+	height: 0;
+	opacity: 0;
+	border: 2px solid;
+	background: #ffffff;
+	transition: height .5s, opacity .5s;
+}
+
+.med-info.active{
+	height: calc(100vh - 160px);
+}
+
