@@ -157,27 +157,27 @@ public class ads extends HttpServlet {
 			out.print("</div>");
 			// end bed panel
 			// start medication info panel
-			out.print("<div class='med-info'>");
-			
-			try {
-				Context initContext = new InitialContext();
-				Context envContext = (Context) initContext.lookup("java:comp/env");
-				DataSource ds = (DataSource) envContext.lookup("jdbc/ADS");
-				Connection conn = ds.getConnection();
-				
-				Statement statement = conn.createStatement();
-				
-				//TODO: Write SQL statement to get patient med info
-				String sql = "SELECT * from ads.order";
-				ResultSet rs = statement.executeQuery(sql);
+			out.print("<div class='med-info'></div>");
 
-				//TODO: Determine how best to display data from given back from result set and change data in this container based on the bed selected.
-								
-			}catch (SQLException | NamingException ex) {
-			//	System.err.println(ex);
-			}
-			
-			out.print("</div>");
+			//Javascript template for med-info panel
+			out.print("<script type='text/html' id='med-info-template'>"
+					+ "<div class='close'><i class='far fa-window-close'></i></div>"
+					+ "<div class='med-info-header'>Patient Name</div>"
+					+ "	<div class='order-info'>"
+					+ "		<div class='drug-info'>"
+					+ "			<div class='drug-name'>Some Drug</div>"
+					+ "			<div class='drug-strength'>Some Strength</div>"
+					+ "			<div class='drug-dose'>Some dosage</div>"
+					+ "			<div class='doctor'>Doctor name</div>"
+					+ "		</div>"
+					+ "		<div class='inventory-info'>"
+					+ "			<div class='drawer'>Drawer #</div>"
+					+ "			<div class='qty'>Qty</div>"
+					+ "			<div class='audit-by'>Last Audited by</div>"
+					+ "			<div class='last-audited'>Last Audited</div>"
+					+ "		</div>"
+					+ "	</div>"
+					+ "</script>");
 			//end medication info panel
 			
 		out.print("<script src='./js/site.js' ></script>\r\n"

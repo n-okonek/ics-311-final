@@ -58,11 +58,27 @@
 	height: 0;
 	opacity: 0;
 	border: 2px solid;
+	border-radius: 5px;
 	background: #ffffff;
+	padding: 20px;
 	transition: height .5s, opacity .5s;
+	display: flex;
+	flex-direction: column;
+	position: relative;
 }
 
 .med-info.active{
 	height: calc(100vh - 160px);
+	opacity: 1
 }
 
+.close {
+	position: absolute;
+	right: 30px;
+	font-size: 1.5rem;
+}
+
+.med-info-header{
+	font-size: 2rem;
+	text-align: center;
+}

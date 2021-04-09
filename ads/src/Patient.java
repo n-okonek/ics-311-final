@@ -46,6 +46,7 @@ public class Patient extends HttpServlet {
 		String lastName = request.getParameter("lName");
 		String patientName = firstName + " " + lastName;
 		int bedNumber = Integer.parseInt(request.getParameter("bed"));
+		int floorNum = Integer.parseInt(request.getParameter("floor"));
 		
 		//MOCK DATA INFO:
 		String drugName = "DrugName1";
@@ -85,7 +86,26 @@ public class Patient extends HttpServlet {
 			Connection conn = ds.getConnection();
 			
 			Statement statement = conn.createStatement();
-			//String sql = "select * from ads.order where ";
+			//String sql = "SELECT ads.patient.bed,"
+			//		+ "		    ads.patient.fname as patient_fname,"
+			//		+ "		    ads.patient.lname as patient_lname,"
+			//		+ "		    ads.medication.name as medication,"
+			//		+ "		    ads.medication.strength as med_strength,"
+			//		+ "		    ads.order.dosage as med_dosage,"
+			//		+ "		    ads.inventory.drawer as drawer_location,"
+			//		+ "		    ads.inventory.qty as drawer_qty,"
+			//		+ "		    ads.user.fname as last_audit_fname,"
+			//		+ "		    ads.user.lname as last_audit_lname,"
+			//		+ "		    ads.inventory.audit_date as last_audit,"
+			//		+ "		    ads.doctor.fname as doctor_fname,"
+			//		+ "		    ads.doctor.lname as doctor_lname"
+			//		+ "		FROM ads.patient"
+			//		+ "		JOIN ads.order ON ads.patient.id = ads.order.patient"
+			//		+ "		JOIN ads.doctor ON ads.order.doctor = ads.doctor.id"
+			//		+ "		JOIN ads.medication ON ads.order.medication = ads.medication.id"
+			//		+ "		JOIN ads.inventory on ads.medication.id = ads.inventory.medication"
+			//		+ "		JOIN ads.user on ads.inventory.last_audited_by = ads.user.id"
+			//		+ "		where building_floor = ? and ads.patient.bed = ?;";
 			
 			//ResultSet rs = statement.executeQuery(sql);
 			
