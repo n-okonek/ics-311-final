@@ -23,13 +23,8 @@ INSERT INTO ads.machine (id, building_floor, num_drawers)
     (1, 1, 5), 
     (2, 2, 5), 
     (3, 3, 5), 
-    (4, 4, 5), 
-    (5, 1, 5), 
-    (6, 2, 5), 
-    (7, 3, 5), 
-    (8, 4, 5), 
-    (9, 1, 5), 
-    (10, 2, 5);
+    (4, 4, 5);
+   
 
 INSERT INTO ads.user (id, username, password, role, fname, lname, mi) 
   VALUES 
@@ -197,9 +192,9 @@ INSERT INTO ads."order" (id, patient, doctor, medication, status, dosage)
     (23, 22, 3, 20, 1, 'orally every 12 hours'), 
     (24, 23, 3, 10, 2, 'twice daily for up to 30 days'), 
     (25, 24, 3, 20, 2, 'the maximum dose is 10 mg not more than once in every 48 hours'), 
-    (26, 1, 4, 11, 2, 'the maximum dose is 10 mg not more than once in every 48 hours'), 
-    (27, 2, 4, 17, 2, 'every 12 hours or one 250-mg tablet every 8 hours'), 
-    (28, 3, 4, 12, 2, '1 pill as needed'), 
-    (29, 4, 3, 17, 2, 'every 8 hours'), 
-    (30, 5, 4, 3, 2, 'At least 2 to 3 weeks'), 
+    (26, 7, 4, 11, 1, 'the maximum dose is 10 mg not more than once in every 48 hours'), 
+    (27, 8, 4, 17, 1, 'every 12 hours or one 250-mg tablet every 8 hours'), 
+    (28, 9, 4, 12, 1, '1 pill as needed'), 
+    (29, 10, 3, 17, 1, 'every 8 hours'), 
+    (30, 12, 4, 3, 1, 'At least 2 to 3 weeks'), 
     (31, 6, 4, 21, 1, 'every 12 hour');
