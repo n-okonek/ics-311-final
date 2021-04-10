@@ -3,11 +3,14 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -19,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
@@ -54,30 +58,17 @@ public class Patient extends HttpServlet {
 		String orderedDose = "1 pill twice daily";
 		String doctorFirstName = "Don";
 		String doctorLastName = "Corleon";
-		String doctorName = doctorFirstName + " " + doctorLastName;
+		//String doctorName = doctorFirstName + " " + doctorLastName;
 		int drawerNumber = 3;
 		int qty = 10;
 		String lastAuditFirstName = "Jay";
 		String lastAuditLastName = "Hoover";
-		String lastAuditBy = lastAuditFirstName + " " + lastAuditLastName;
+		int orderId = 3;
+		//String lastAuditBy = lastAuditFirstName + " " + lastAuditLastName;
 		LocalDate today = LocalDate.now();
 		DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("E, MMM dd yyyy");
 		String lastAuditDate = today.format(formatDate);
 		//END MOCK DATA INFO
-		
-		//create the json object
-		JSONObject obj = new JSONObject();
-		obj.put("patient", patientName);
-		obj.put("bed", bedNumber);
-		obj.put("drug", drugName);
-		obj.put("strength", drugStrength);
-		obj.put("dose", orderedDose);
-		obj.put("doctor", doctorName);
-		obj.put("drawer", drawerNumber);
-		obj.put("qty", qty);
-		obj.put("lastAuditBy", lastAuditBy);
-		obj.put("lastAuditDate", lastAuditDate);
-		
 		
 		try {
 			Context initContext = new InitialContext();
@@ -85,35 +76,72 @@ public class Patient extends HttpServlet {
 			DataSource ds = (DataSource) envContext.lookup("jdbc/ADS");
 			Connection conn = ds.getConnection();
 			
+			String sql = "SELECT ads.medication.name as medication,"
+					+ "		    ads.medication.strength as med_strength,"
+					+ "			ads.order.id as orderID,"
+					+ "		    ads.order.dosage as med_dosage,"
+					+ "		    ads.inventory.drawer as drawer_location,"
+					+ "		    ads.inventory.qty as drawer_qty,"
+					+ "		    ads.user.fname as last_audit_fname,"
+					+ "		    ads.user.lname as last_audit_lname,"
+					+ "		    ads.inventory.audit_date as last_audit,"
+					+ "		    ads.doctor.fname as doctor_fname,"
+					+ "		    ads.doctor.lname as doctor_lname"
+					+ "		FROM ads.patient"
+					+ "		JOIN ads.order ON ads.patient.id = ads.order.patient"
+					+ "		JOIN ads.doctor ON ads.order.doctor = ads.doctor.id"
+					+ "		JOIN ads.medication ON ads.order.medication = ads.medication.id"
+					+ "		JOIN ads.inventory on ads.medication.id = ads.inventory.medication"
+					+ "		JOIN ads.user on ads.inventory.last_audited_by = ads.user.id"
+					+ "		WHERE building_floor =" + floorNum 
+					+ " 		AND ads.patient.bed = " + bedNumber
+					+ "			AND ads.order.status = 1;";
+
 			Statement statement = conn.createStatement();
-			//String sql = "SELECT ads.patient.bed,"
-			//		+ "		    ads.patient.fname as patient_fname,"
-			//		+ "		    ads.patient.lname as patient_lname,"
-			//		+ "		    ads.medication.name as medication,"
-			//		+ "		    ads.medication.strength as med_strength,"
-			//		+ "		    ads.order.dosage as med_dosage,"
-			//		+ "		    ads.inventory.drawer as drawer_location,"
-			//		+ "		    ads.inventory.qty as drawer_qty,"
-			//		+ "		    ads.user.fname as last_audit_fname,"
-			//		+ "		    ads.user.lname as last_audit_lname,"
-			//		+ "		    ads.inventory.audit_date as last_audit,"
-			//		+ "		    ads.doctor.fname as doctor_fname,"
-			//		+ "		    ads.doctor.lname as doctor_lname"
-			//		+ "		FROM ads.patient"
-			//		+ "		JOIN ads.order ON ads.patient.id = ads.order.patient"
-			//		+ "		JOIN ads.doctor ON ads.order.doctor = ads.doctor.id"
-			//		+ "		JOIN ads.medication ON ads.order.medication = ads.medication.id"
-			//		+ "		JOIN ads.inventory on ads.medication.id = ads.inventory.medication"
-			//		+ "		JOIN ads.user on ads.inventory.last_audited_by = ads.user.id"
-			//		+ "		where building_floor = ? and ads.patient.bed = ?;";
 			
-			//ResultSet rs = statement.executeQuery(sql);
+			ResultSet rs = statement.executeQuery(sql);
+			ResultSetMetaData rsmd = rs.getMetaData();
+
+			//create the JSON object
+			JSONObject patientInfo = new JSONObject();
+			JSONArray orderInfo = new JSONArray();
+			JSONObject order = new JSONObject();
+			JSONObject inventoryInfo = new JSONObject();
+			JSONObject data = new JSONObject();
+			
+			patientInfo.put("name", patientName);
+			patientInfo.put("bed", bedNumber);
+			
+			data.put("patient", patientInfo);
+						
+			while (rs.next() ) {
+				order.put("orderId", rs.getString("orderID"));
+				order.put("drug", rs.getString("medication"));
+				order.put("strength", rs.getString("med_strength"));
+				order.put("dose", rs.getString("med_dosage"));
+				
+				String doctorName = rs.getString("doctor_fname") + " " + rs.getString("doctor_lname");
+				order.put("doctor", doctorName);
+				
+				inventoryInfo.put("drawer", rs.getInt("drawer_location"));
+				inventoryInfo.put("qty", rs.getInt("drawer_qty"));
+				String lastAuditBy = rs.getString("last_audit_fname") + " " + rs.getString("last_audit_lname");
+				inventoryInfo.put("lastAuditBy", lastAuditBy);
+				inventoryInfo.put("lastAuditDate", rs.getString("last_audit"));
+				
+				order.put("inventory", inventoryInfo);
+				
+				orderInfo.add(order);
+			}
+			
+			data.put("orders", orderInfo);
+			
 			
 			// put result code here...
 			PrintWriter out = response.getWriter();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-			out.print(obj);
+			out.print(data);
 			
 			conn.close();
 		}catch (SQLException | NamingException ex) {
