@@ -44,7 +44,7 @@ public class ads extends HttpServlet {
 		PrintWriter out;
 		out = response.getWriter();
 		String title = "Automatic Dispensing Systems";
-		int machineId = 3;
+		int machineId = 2;
 		int floorNum = 2;
 		
 		//Start HTML document header
@@ -101,7 +101,7 @@ public class ads extends HttpServlet {
 						+ "      </ul>"
 						+ "    </div>");
 				//start search form
-				out.print("<form class='d-flex justify-content-end' action='home' method='post'>\r\n"
+				out.print("<form class='d-flex justify-content-end' action='/ads/search' method='post'>\r\n"
 						+ "    <div class='form-floating me-4'>"
 						+ "        <input class='form-control me-2' id='sTerm' name='sTerm' type='search' placeholder='Search for patient orders' aria-label='Search'>\r\n"
 						+ "        <label for='sTerm'>Search for patient orders</label>"
@@ -163,6 +163,9 @@ public class ads extends HttpServlet {
 			out.print("<script type='text/html' id='med-info-template'>"
 					+ "<div class='close'><i class='far fa-window-close'></i></div>"
 					+ "<div class='med-info-header'></div>"
+					+ "	</div>"
+					+ "</script>"
+					+ "<script type='text/html' id='order-info-template'>"
 					+ "	<div class='order-info'>"
 					+ "		<div class='order-num'></div>"
 					+ "		<div class='drug-info'>"
@@ -177,7 +180,6 @@ public class ads extends HttpServlet {
 					+ "			<div class='audit-by'></div>"
 					+ "			<div class='last-audited'></div>"
 					+ "		</div>"
-					+ "	</div>"
 					+ "</script>");
 			//end medication info panel
 			

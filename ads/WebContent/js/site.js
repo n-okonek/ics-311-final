@@ -17,22 +17,28 @@ $(document).ready(function(){
 					$('.med-info').html("");
 				}
 
-				var template = $(dummy).clone();
+				var medTemplate = $(dummy).clone();
 
-				$(template).closest('.med-info-header').text("Patient: " + data.patient.name);
+				$(medTemplate).closest('.med-info-header').text("Patient: " + data.patient.name);
+
+				$('.med-info').append(medTemplate);
 				
-				$.each(data.order, function(){
-					$(template).find('.order-num').text('Order Number: ' + data.order.orderId);
-					$(template).find('.drug-name').text('Medication: ' + data.order.drug);
-					$(template).find('.drug-strength').text('Strength: ' + data.order.dose);
-					$(template).find('.doctor').text('Doctor: ' + data.order.doctor);
-					$(template).find('.drawer').text('Drawer: ' + data.order.inventory.drawer);
-					$(template).find('.qty').text('Qty: ' + data.order.inventory.qty);
-					$(template).find('.audit-by').text('Last audited by: ' + data.order.inventory.lastAuditBy);
-					$(template).find('.last-audited').text('Last audited:' + data.order.inventory.lastAuditDate);
+				$.each(data.orders, function(i, orders){
+					var orderTemplate = $('#order-info-template').html();
+					var order = $(orderTemplate).clone();
+
+					$(order).find('.order-num').html('<b>Order Number:</b> ' + orders.orderId);
+					$(order).find('.drug-name').html('<b>Medication:</b> ' + orders.drug);
+					$(order).find('.drug-strength').html('<b>Strength:</b> ' + orders.strength);
+					$(order).find('.drug-dose').html('<b>Dose:</b> ' + orders.dose)
+					$(order).find('.doctor').html('<b>Doctor:</b> ' + orders.doctor);
+					$(order).find('.drawer').html('<b>Drawer:</b> ' + orders.inventory.drawer);
+					$(order).find('.qty').html('<b>Qty:</b> ' + orders.inventory.qty);
+					$(order).find('.audit-by').html('<b>Last audited by:</b> ' + orders.inventory.lastAuditBy);
+					$(order).find('.last-audited').html('<b>Last audited:</b> ' + orders.inventory.lastAuditDate);
+
+					$('.med-info').append(order);
 				});
-					
-			$('.med-info').append(template);
 
 			$('.med-info').addClass('active');
 

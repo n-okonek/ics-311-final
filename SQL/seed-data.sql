@@ -21,7 +21,7 @@ INSERT INTO ads.doctor (id, fname, lname, mi)
 INSERT INTO ads.machine (id, building_floor, num_drawers) 
   VALUES 
     (1, 1, 13), 
-    (2, 2, 13), 
+    (2, 2, 15), 
     (3, 3, 12), 
     (4, 4, 12);
    
@@ -71,6 +71,7 @@ INSERT INTO ads.medication (id, name, strength, expiration)
 
 INSERT INTO ads.inventory (machine, drawer, medication, qty, active, audit_date, last_audited_by, min_qty, max_qty) 
   VALUES
+    (2, 14, 3, 10, true, '2020-06-20', 15, 5, 50)
     (1, 1, 1, 10, true, '2020-06-20', 15, 20, 50),
     (1, 2, 3, 10, true, '2020-06-20', 15, 20, 50),
     (1, 3, 5, 10, true, '2020-06-20', 15, 20, 50),

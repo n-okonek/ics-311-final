@@ -87,13 +87,14 @@ public class Patient extends HttpServlet {
 					+ "		    ads.inventory.audit_date as last_audit,"
 					+ "		    ads.doctor.fname as doctor_fname,"
 					+ "		    ads.doctor.lname as doctor_lname"
-					+ "		FROM ads.patient"
-					+ "		JOIN ads.order ON ads.patient.id = ads.order.patient"
-					+ "		JOIN ads.doctor ON ads.order.doctor = ads.doctor.id"
-					+ "		JOIN ads.medication ON ads.order.medication = ads.medication.id"
-					+ "		JOIN ads.inventory on ads.medication.id = ads.inventory.medication"
+					+ "		FROM ads.order"
+					+ "		JOIN ads.patient on ads.order.patient = ads.patient.id"
+					+ "		JOIN ads.doctor on ads.order.doctor = ads.doctor.id"
+					+ "		JOIN ads.medication on ads.order.medication = ads.medication.id"
+					+ "		JOIN ads.inventory on ads.order.medication = ads.inventory.medication"
 					+ "		JOIN ads.user on ads.inventory.last_audited_by = ads.user.id"
-					+ "		WHERE building_floor =" + floorNum 
+					+ "		WHERE ads.patient.building_floor =" + floorNum
+					+ " 		AND ads.inventory.machine =" + floorNum
 					+ " 		AND ads.patient.bed = " + bedNumber
 					+ "			AND ads.order.status = 1;";
 
@@ -105,8 +106,6 @@ public class Patient extends HttpServlet {
 			//create the JSON object
 			JSONObject patientInfo = new JSONObject();
 			JSONArray orderInfo = new JSONArray();
-			JSONObject order = new JSONObject();
-			JSONObject inventoryInfo = new JSONObject();
 			JSONObject data = new JSONObject();
 			
 			patientInfo.put("name", patientName);
@@ -115,6 +114,7 @@ public class Patient extends HttpServlet {
 			data.put("patient", patientInfo);
 						
 			while (rs.next() ) {
+				JSONObject order = new JSONObject();
 				order.put("orderId", rs.getString("orderID"));
 				order.put("drug", rs.getString("medication"));
 				order.put("strength", rs.getString("med_strength"));
@@ -123,6 +123,7 @@ public class Patient extends HttpServlet {
 				String doctorName = rs.getString("doctor_fname") + " " + rs.getString("doctor_lname");
 				order.put("doctor", doctorName);
 				
+				JSONObject inventoryInfo = new JSONObject();
 				inventoryInfo.put("drawer", rs.getInt("drawer_location"));
 				inventoryInfo.put("qty", rs.getInt("drawer_qty"));
 				String lastAuditBy = rs.getString("last_audit_fname") + " " + rs.getString("last_audit_lname");
