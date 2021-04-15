@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 //import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -101,7 +102,7 @@ public class ads extends HttpServlet {
 						+ "      </ul>"
 						+ "    </div>");
 				//start search form
-				out.print("<form class='d-flex justify-content-end' action='/ads/search' method='post'>\r\n"
+				out.print("<form id='search' class='d-flex justify-content-end' action='/ads/home' method='post'>\r\n"
 						+ "    <div class='form-floating me-4'>"
 						+ "        <input class='form-control me-2' id='sTerm' name='sTerm' type='search' placeholder='Search for patient orders' aria-label='Search'>\r\n"
 						+ "        <label for='sTerm'>Search for patient orders</label>"
@@ -194,6 +195,87 @@ public class ads extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+		
+		String searchTerm = request.getParameter("sTerm");
+		String fName;
+		String lName;
+		
+		if ( searchTerm.contains(",") ){
+			String[] splitName = searchTerm.split(",");
+			fName = splitName[1].trim();
+			lName = splitName[0];
+		}else if ( searchTerm.contains(" ") ) {
+			String[] splitName = searchTerm.split("\s");
+			fName = splitName[0];
+			lName = splitName[1];
+		}else {
+			fName = searchTerm;
+			lName = searchTerm;
+		}
+		
+		try {
+			Context initContext = new InitialContext();
+			Context envContext = (Context) initContext.lookup("java:comp/env");
+			DataSource ds = (DataSource) envContext.lookup("jdbc/ADS");
+			Connection conn = ds.getConnection();
+						
+			String sql = "SELECT ads.order.patient, "
+					+ "ads.order.id as orderId, "
+					+ "ads.patient.fname as firstname, "
+					+ "ads.patient.lname as lastname, "
+					+ "ads.doctor.fname as doc_fname, "
+					+ "ads.doctor.lname as doc_lname, "
+					+ "ads.medication.name as med_name, "
+					+ "ads.medication.strength as med_strength, "
+					+ "ads.order.dosage as med_dosage, "
+					+ "ads.status.status as status "
+					+ "FROM ads.order "
+					+ "JOIN ads.patient ON ads.order.patient = ads.patient.id "
+					+ "JOIN ads.doctor ON ads.order.doctor = ads.doctor.id "
+					+ "JOIN ads.medication on ads.order.medication = ads.medication.id "
+					+ "JOIN ads.status on ads.order.status = ads.status.id "
+					+ "WHERE ads.patient.fname ILIKE '%" + fName + "%' OR ads.patient.lname ILIKE '%" + lName + "%'";
+			
+			Statement statement = conn.createStatement();
+			
+			ResultSet rs = statement.executeQuery(sql);
+			
+			PrintWriter out = response.getWriter();
+			
+			out.print("<div class='blackout'>"
+					+ "	<div class='search-result-panel'>"
+					+ "		<div class='close'><i class='far fa-window-close'></i></div>");
+			if (!rs.next()) {
+				out.print("<h3>No results found for \"" + searchTerm +"\"</h3>");
+			}else {
+				out.print("<h3>Search Results for ");
+					
+				if (fName == lName) {
+					out.print(fName);
+				}else {
+					out.print(fName + " " + lName);
+				}
+				out.print("</h3>");
+				while (rs.next()) {
+					out.print("<div class='result-set'>"
+							+ "<div><b>Order Number:</b> " + rs.getString("orderId") + " <b>Status:</b> " + rs.getString("status") + "</div>"
+							+ "<div><b>Patient:</b> " + rs.getString("firstname") + " " +rs.getString("lastname") + "</div>"
+							+ "<div><b>Doctor:</b> " + rs.getString("doc_fname") + " " + rs.getString("doc_lname") + "</div>"
+							+ "<div><b>Order Info:</b> " + rs.getString("med_name") + ", " + rs.getString("med_strength") + ", " + rs.getString("med_dosage") + "</div>"
+							+ "</div>");
+				}
+			}
+			out.print("	</div>"
+					+ "</div>"
+					+ "<script>"
+					+ "$('.close').click(function(){\r\n"
+					+ "	$('.blackout').remove();\r\n"
+					+ "});"
+					+ "</script>");
+			conn.close();
+		}catch (SQLException | NamingException ex) {
+			System.err.println(ex);
+		}
 		
 		//TODO Write function that returns search results back to the page
 	}
