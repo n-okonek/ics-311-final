@@ -1,4 +1,6 @@
 $(document).ready(function(){
+
+
 	$('.bed-wrapper').click(function(){
 		var patientName = $.trim( $(this).find('.p-name').text());
 		var splitName = patientName.split(" ");
@@ -52,3 +54,15 @@ $(document).ready(function(){
 		});
 	});
 });
+
+$('#sTerm').bind('keyup', function() {
+	if(allFilled()) $('#searchButton').removeAttr('disabled');
+});
+
+function allFilled() {
+	var filled = true;
+	$('body input').each(function() {
+			if($(this).val() == '') filled = false;
+	});
+	return filled;
+}

@@ -107,7 +107,7 @@ public class ads extends HttpServlet {
 						+ "        <input class='form-control me-2' id='sTerm' name='sTerm' type='search' placeholder='Search for patient orders' aria-label='Search'>\r\n"
 						+ "        <label for='sTerm'>Search for patient orders</label>"
 						+ "    </div>"
-						+ "    <button class='btn btn-outline-light me-3' type='submit'>Search</button>\r\n"
+						+ "    <button id='searchButton' class='btn btn-outline-light me-3' disabled type='submit'>Search</button>\r\n"
 						+ "</form>");
 				//end search form
 			out.print("</div>");
@@ -236,7 +236,7 @@ public class ads extends HttpServlet {
 					+ "JOIN ads.status on ads.order.status = ads.status.id "
 					+ "WHERE ads.patient.fname ILIKE '%" + fName + "%' OR ads.patient.lname ILIKE '%" + lName + "%'";
 			
-			Statement statement = conn.createStatement();
+			Statement statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			
 			ResultSet rs = statement.executeQuery(sql);
 			
@@ -245,6 +245,7 @@ public class ads extends HttpServlet {
 			out.print("<div class='blackout'>"
 					+ "	<div class='search-result-panel'>"
 					+ "		<div class='close'><i class='far fa-window-close'></i></div>");
+			rs.beforeFirst();
 			if (!rs.next()) {
 				out.print("<h3>No results found for \"" + searchTerm +"\"</h3>");
 			}else {
@@ -256,6 +257,7 @@ public class ads extends HttpServlet {
 					out.print(fName + " " + lName);
 				}
 				out.print("</h3>");
+				rs.beforeFirst();
 				while (rs.next()) {
 					out.print("<div class='result-set'>"
 							+ "<div><b>Order Number:</b> " + rs.getString("orderId") + " <b>Status:</b> " + rs.getString("status") + "</div>"
